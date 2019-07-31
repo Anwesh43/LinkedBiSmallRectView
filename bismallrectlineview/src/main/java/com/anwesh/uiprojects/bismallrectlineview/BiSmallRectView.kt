@@ -221,4 +221,13 @@ class BiSmallRectView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : BiSmallRectView {
+            val view : BiSmallRectView = BiSmallRectView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }
