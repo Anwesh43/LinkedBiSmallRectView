@@ -35,7 +35,7 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
 
 fun Canvas.drawBiSmallRect(i : Int, sc : Float, size : Float, paint : Paint) {
-    val sci : Float = sc.divideScale(0, parts)
+    val sci : Float = sc.divideScale(i, parts)
     val sf : Float = 1f - 2 * i
     val x : Float = size * sf * sci.divideScale(0, lines)
     val y : Float = size * sf * sci.divideScale(1, lines)
@@ -208,6 +208,7 @@ class BiSmallRectView(ctx : Context) : View(ctx) {
 
         fun render(canvas : Canvas, paint : Paint) {
             canvas.drawColor(backColor)
+            bsr.draw(canvas, paint)
             animator.animate {
                 bsr.update {i, scl ->
                     animator.stop()
@@ -227,7 +228,7 @@ class BiSmallRectView(ctx : Context) : View(ctx) {
         fun create(activity : Activity) : BiSmallRectView {
             val view : BiSmallRectView = BiSmallRectView(activity)
             activity.setContentView(view)
-            return view 
+            return view
         }
     }
 }
