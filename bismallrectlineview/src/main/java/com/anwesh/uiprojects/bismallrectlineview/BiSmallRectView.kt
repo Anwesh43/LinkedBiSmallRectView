@@ -195,8 +195,29 @@ class BiSmallRectView(ctx : Context) : View(ctx) {
             }
         }
 
-        fun startUpdating() {
-            curr.startUpdating()
+        fun startUpdating(cb : () -> Unit) {
+            curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : BiSmallRectView) {
+
+        private val bsr : BiSmallRect = BiSmallRect(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            animator.animate {
+                bsr.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            bsr.startUpdating {
+                animator.start()
+            }
         }
     }
 }
