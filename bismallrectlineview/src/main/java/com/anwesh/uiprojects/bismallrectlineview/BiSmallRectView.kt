@@ -22,6 +22,7 @@ val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#388E3C")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val rectSizeFactor : Float = 3.7f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -32,3 +33,36 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
     return (1 - k) * a.inverse() + k * b.inverse()
 }
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawBiSmallRect(i : Int, sc : Float, size : Float, paint : Paint) {
+    val sci : Float = sc.divideScale(0, parts)
+    val sf : Float = 1f - 2 * i
+    val x : Float = size * sf * sci.divideScale(0, lines)
+    val y : Float = size * sf * sci.divideScale(1, lines)
+    drawLine(0f, 0f, x, 0f, paint)
+    drawLine(x, 0f, x, y, paint)
+    val rectSize = size / (2 * rectSizeFactor)
+    save()
+    translate(x, y)
+    drawRect(-rectSize, -rectSize, rectSize, rectSize, paint)
+    restore()
+}
+
+fun Canvas.drawBSRNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    paint.color = foreColor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    save()
+    translate(w / 2, gap * (i + 1))
+    rotate(90f * sc2)
+    for (j in 0..(parts - 1)) {
+        drawBiSmallRect(j, sc1, size, paint)
+    }
+    restore()
+}
