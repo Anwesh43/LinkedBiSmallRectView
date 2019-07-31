@@ -44,7 +44,7 @@ fun Canvas.drawBiSmallRect(i : Int, sc : Float, size : Float, paint : Paint) {
     val rectSize = size / (2 * rectSizeFactor)
     save()
     translate(x, y)
-    drawRect(-rectSize, -rectSize, rectSize, rectSize, paint)
+    drawRect(RectF(-rectSize, -rectSize, rectSize, rectSize), paint)
     restore()
 }
 
@@ -70,15 +70,16 @@ fun Canvas.drawBSRNode(i : Int, scale : Float, paint : Paint) {
 class BiSmallRectView(ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val renderer : Renderer = Renderer(this)
 
     override fun onDraw(canvas : Canvas) {
-
+        renderer.render(canvas, paint)
     }
 
     override fun onTouchEvent(event : MotionEvent) : Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
